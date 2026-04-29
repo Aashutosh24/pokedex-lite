@@ -5,7 +5,7 @@ function PokemonCard({ pokemon, onClose }) {
   return (
     <div
       className="modal"
-      onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
+      onClick={(e) => e.stopPropagation()} 
     >
       {/* Header */}
       <div className="modal-header">
