@@ -1,3 +1,10 @@
+.dark h1{
+  text-shadow: 3px 1px 1px #FFFFFF;
+}
+h1 {
+  text-shadow: 2px 2px 1px #ffca28;
+  font-family: "Limelight";
+}
 .img_poke{
   display: grid;
   place-items: center;
@@ -93,4 +100,239 @@
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 10px;
+}
+.pokemon-card {
+  position: relative;
+  background: #d9fdf0;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.pokemon-card:hover {
+  transform: translateY(-4px);
+}
+
+.pokemon-card__favorite {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #fff;
+  border: none;
+  font-size: 20px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+.pokemon-card__favorite.is-active {
+  color: #e11d48;
+}
+
+.pokemon-card__image-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.pokemon-card__body h3 {
+  text-transform: capitalize;
+}
+
+.pokemon-card__types {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.type-pill {
+  background: #f1f5f9;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 14px;
+}
+.dark .type-pill {
+  color: #111827;
+}
+
+.pokemon-card__stats {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.pokeball-burst {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle at center, #fff 35%, #000 36%, #000 40%, #f00 41%);
+  border: 2px solid #000;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: pokeballPop 0.7s ease-out forwards;
+  pointer-events: none;
+  z-index: 99999;
+}
+.pokemon-card {
+  position: relative;
+  background: #d9fdf0;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  overflow: hidden;
+  border: 3px solid transparent;
+}
+
+.pokemon-card.is-favorited {
+  border-color: #ffca28;
+  background-color: #fffdf5;
+}
+
+.pokemon-card__favorite {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #fff;
+  border: none;
+  font-size: 20px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+.pokemon-card__favorite.is-active {
+  color: #e11d48;
+}
+
+.capture-animation-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 1.3s ease;
+}
+
+.pokemon-card.is-favoriting .capture-animation-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pokeball-container {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  perspective: 300px;
+}
+
+.pokeball-top,
+.pokeball-bottom {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  border: 5px solid #333;
+  left: 0;
+  box-sizing: border-box;
+}
+
+.pokeball-top {
+  background-color: #ef5350;
+  top: 0;
+  border-radius: 80px 80px 0 0;
+  transform-origin: bottom center;
+}
+
+.pokeball-bottom {
+  background-color: #fff;
+  bottom: 0;
+  border-radius: 0 0 80px 80px;
+  border-top: none;
+}
+
+.pokeball-button {
+  width: 26px;
+  height: 26px;
+  background: #fff;
+  border: 5px solid #333;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  box-sizing: border-box;
+}
+
+.capture-status-text {
+  font-weight: bold;
+  color: #555;
+  font-size: 16px;
+  margin: 0;
+  opacity: 0;
+}
+
+@keyframes text-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes text-success-highlight {
+  0% { color: #555; transform: scale(1); }
+  50% { color: #2e7d32; transform: scale(1.05); }
+  100% { color: #2e7d32; transform: scale(1); }
+}
+
+@keyframes pokeball-spawn {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes lid-animate {
+  0% { transform: rotateX(0deg); }
+  25% { transform: rotateX(-110deg); }
+  70% { transform: rotateX(-110deg); }
+  100% { transform: rotateX(0deg); }
+}
+
+@keyframes success-glow {
+  0%, 80% { box-shadow: 0 0 0 rgba(76, 175, 80, 0); background: #fff; }
+  90% { box-shadow: 0 0 20px rgba(76, 175, 80, 1); background: #81c784; }
+  100% { box-shadow: 0 0 0 rgba(76, 175, 80, 0); background: #fff; }
+}
+
+.pokemon-card.is-favoriting .pokeball-container {
+  animation: pokeball-spawn 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.pokemon-card.is-favoriting .pokeball-top {
+  animation: lid-animate 0.75s ease-in-out forwards;
+}
+
+.pokemon-card.is-favoriting .pokeball-button {
+  animation: success-glow 0.75s ease-out forwards;
+}
+
+.pokemon-card.is-favoriting .capture-status-text {
+  animation: text-fade-in 1.8s ease-out forwards;
+}
+
+.capture-status-text.is-complete {
+  animation: text-success-highlight 1.8s ease-out forwards;
 }

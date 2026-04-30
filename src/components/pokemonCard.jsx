@@ -1,62 +1,104 @@
-function PokemonCard({ pokemon, onClose }) {
+import { useEffect, useState } from "react";
 
-  if (!pokemon) return null;
+function PokemonCard({
+  pokemon,
+  isFavorite,
+  onToggleFavorite,
+  onSelectPokemon,
+  typesColor = {},
+}) {
+  const [isFavoriting, setIsFavoriting] = useState(false);
+  const [statusText, setStatusText] = useState("");
+  const [isComplete, setIsComplete] = useState(false);
+
+  useEffect(() => {
+    if (!isFavoriting) return;
+
+    setStatusText(`Capturing ${pokemon.name}...`);
+    setIsComplete(false);
+
+    const midTimer = setTimeout(() => {
+      setStatusText(`Gotcha! ${pokemon.name} was caught!`);
+      setIsComplete(true);
+    }, 700);
+
+    const endTimer = setTimeout(() => {
+      setIsFavoriting(false);
+    }, 1300);
+
+    return () => {
+      clearTimeout(midTimer);
+      clearTimeout(endTimer);
+    };
+  }, [isFavoriting, pokemon.name]);
 
   return (
-    <div
-      className="modal"
-      onClick={(e) => e.stopPropagation()} 
+    <article
+      className={`pokemon-card${isFavorite ? " is-favorited" : ""}${
+        isFavoriting ? " is-favoriting" : ""
+      }`}
+      role="button"
+      tabIndex={0}
+      onClick={() => onSelectPokemon(pokemon)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onSelectPokemon(pokemon);
+        }
+      }}
     >
-      {/* Header */}
-      <div className="modal-header">
-        <div>
-          <p className="small">POKÉMON DETAIL</p>
-          <h2>{pokemon.name}</h2>
-          <p>
-            #{String(pokemon.id).padStart(3, "0")} •{" "}
-            {pokemon.types.map(t => t.type.name).join(" / ")}
-          </p>
-        </div>
+      <button
+        type="button"
+        className={`pokemon-card__favorite${isFavorite ? " is-active" : ""} cursor-pointer`}
+        onClick={(event) => {
+          event.stopPropagation();
 
-        <button className="close-btn" onClick={onClose}>×</button>
+          if (!isFavorite) {
+            setIsFavoriting(true);
+          }
+          onToggleFavorite(pokemon.id);
+        }}
+        aria-label={`${isFavorite ? "Remove" : "Add"} ${pokemon.name} to favorites`}
+      >
+        {isFavorite ? "♥" : "♡"}
+      </button>
+
+      <div className="pokemon-card__image-wrap">
+        <img src={pokemon.image} alt={pokemon.name} loading="lazy" />
       </div>
 
-      {/* Body */}
-      <div className="modal-body">
-        <div className="left">
-          <img
-            src={
-              pokemon.sprites.other?.["official-artwork"]?.front_default
-            }
-            alt={pokemon.name}
-          />
-        </div>
+      <div className="pokemon-card__body">
+        <h3>{pokemon.name}</h3>
 
-        <div className="right">
-          <h4>Stats</h4>
-
-          <div className="stat">
-            <span>HP</span>
-            <span>{pokemon.stats[0].base_stat}</span>
-          </div>
-
-          <div className="stat">
-            <span>Attack</span>
-            <span>{pokemon.stats[1].base_stat}</span>
-          </div>
-
-          <div className="stat">
-            <span>Defense</span>
-            <span>{pokemon.stats[2].base_stat}</span>
-          </div>
-
-          <div className="stat">
-            <span>Speed</span>
-            <span>{pokemon.stats[5].base_stat}</span>
-          </div>
+        <div className="pokemon-card__types">
+          {pokemon.types.map((type) => (
+            <span
+              key={type}
+              className="type-pill capitalize"
+              style={{
+                backgroundColor: typesColor[type] || "#e2e8f0",
+              }}
+            >
+              {type}
+            </span>
+          ))}
         </div>
       </div>
-    </div>
+      <div className="capture-animation-overlay">
+        <div className="pokeball-container">
+          <div className="pokeball-top"></div>
+          <div className="pokeball-bottom"></div>
+          <div className="pokeball-button"></div>
+        </div>
+        <p
+          className={`capture-status-text${
+            isComplete ? " is-complete" : ""
+          }`}
+        >
+          {statusText}
+        </p>
+      </div>
+    </article>
   );
 }
 
