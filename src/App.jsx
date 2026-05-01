@@ -282,7 +282,7 @@ function App() {
                       setUser(null);
                       localStorage.removeItem("user");
                     }}
-                    className="text-sm px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer dark:black"
+                    className="text-sm px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer  dark:text-black"
                   >
                     Logout
                   </button>
@@ -320,7 +320,7 @@ function App() {
                           localStorage.removeItem("user");
                           setPhoneAuth(false);
                         }}
-                        className="text-xs text-red-500 cursor-pointer dark:text-black"
+                        className="text-xs text-red-500 cursor-pointer"
                       >
                         Logout
                       </button>
@@ -340,43 +340,43 @@ function App() {
           </h3>
 
           <div className="w-full max-w-3xl mx-auto mt-6 px-4">
-  <div className="p-4 bg-gray-100 dark:bg-gray-700 
+            <div
+              className="p-4 bg-gray-100 dark:bg-gray-700 
     rounded-2xl shadow-sm 
     flex flex-col sm:flex-row 
-    gap-4 items-center">
-
-    <input
-      type="text"
-      placeholder="Search by name"
-      value={searchPoke}
-      onChange={(e) => setSearchPoke(e.target.value)}
-      className="w-full sm:flex-1 px-4 py-3 rounded-xl border 
+    gap-4 items-center"
+            >
+              <input
+                type="text"
+                placeholder="Search by name"
+                value={searchPoke}
+                onChange={(e) => setSearchPoke(e.target.value)}
+                className="w-full sm:flex-1 px-4 py-3 rounded-xl border 
       bg-white dark:bg-zinc-600 dark:text-sky-200"
-    />
+              />
 
-    <select
-      value={selectedType}
-      onChange={(e) => setSelectedType(e.target.value)}
-      className="w-full sm:w-auto px-4 py-3 rounded-xl border 
+              <select
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="w-full sm:w-auto px-4 py-3 rounded-xl border 
       bg-white dark:bg-zinc-600 dark:text-sky-300"
-    >
-      <option value="all">All</option>
-      {types.map((t) => (
-        <option key={t.name} value={t.name}>
-          {t.name.charAt(0).toUpperCase() + t.name.slice(1)}
-        </option>
-      ))}
-    </select>
+              >
+                <option value="all">All</option>
+                {types.map((t) => (
+                  <option key={t.name} value={t.name}>
+                    {t.name.charAt(0).toUpperCase() + t.name.slice(1)}
+                  </option>
+                ))}
+              </select>
 
-    <div className="w-full sm:w-auto">
-      <FavoritesToggle
-        showFavorites={showFavorites}
-        onToggle={() => setShowFavorites((s) => !s)}
-      />
-    </div>
-
-  </div>
-</div>
+              <div className="w-full sm:w-auto">
+                <FavoritesToggle
+                  showFavorites={showFavorites}
+                  onToggle={() => setShowFavorites((s) => !s)}
+                />
+              </div>
+            </div>
+          </div>
           <div className="pokemon-grid grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 dark:text-cyan-500 p-12 rounded-lg ml-18 mr-18">
             {pagePokemon.length === 0 ? (
               <p className="text-center mt-10 text-gray-500">
