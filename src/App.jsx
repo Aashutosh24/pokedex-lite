@@ -242,7 +242,7 @@ function App() {
           )}
           <div className="max-w-6xl mx-auto flex items-center gap-3 px-6 pt-8 pb-2">
             <img
-              src="public/icon.png"
+              src="/icon.png"
               alt="Pokeball"
               className="w-10 h-10 object-contain"
             />
