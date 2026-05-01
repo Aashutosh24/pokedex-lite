@@ -6,6 +6,7 @@ import PokemonCard from "./components/pokemonCard.jsx";
 import ThemeBtn from "./components/ThemeBtn.jsx";
 import FavoritesToggle from "./components/favoritesToggle.jsx";
 import PokemonModal from "./components/PokemonModal.jsx";
+import GoogleLogin from "./components/GoogleLogin.jsx";
 
 const POKEMON_API = "https://pokeapi.co/api/v2";
 const PAGE_SIZE = 20;
@@ -35,6 +36,7 @@ function normalizePokemon(details) {
     attack: stats.attack ?? 0,
     defense: stats.defense ?? 0,
     speed: stats.speed ?? 0,
+    specialAttack: stats["special-attack"] ?? 0,
   };
 }
 
@@ -49,26 +51,39 @@ function App() {
   const [page, setPage] = useState(1);
   const [searchPoke, setSearchPoke] = useState("");
   const [selectedType, setSelectedType] = useState("all");
+  const [toast, setToast] = useState("");
+  const [phoneAuth, setPhoneAuth] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
   const [favoriteIds, setFavoriteIds] = useState(() => {
     const stored = localStorage.getItem(FAVORITES_KEY);
     return stored ? JSON.parse(stored) : [];
   });
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user")) || null,
+  );
 
   const darkTheme = () => setThemeMode("dark");
   const lightTheme = () => setThemeMode("light");
 
   const typesColor = {
-    grass: "#A8E6A3",
-    fire: "#F5B97A",
-    water: "#A7C7E7",
-    electric: "#F9E79F",
-    poison: "#D2B4DE",
-    bug: "#D4E157",
-    normal: "#E0E0E0",
-    flying: "#C5CAE9",
-    ground: "#E6CBA8",
-    fairy: "#F8C8DC",
+    grass: { bg: "#dcfce7", text: "#166534" },
+    fire: { bg: "#fee2e2", text: "#991b1b" },
+    water: { bg: "#dbeafe", text: "#1e40af" },
+    electric: { bg: "#fef9c3", text: "#854d0e" },
+    poison: { bg: "#f3e8ff", text: "#6b21a8" },
+    bug: { bg: "#ecfccb", text: "#3f6212" },
+    normal: { bg: "#f1f5f9", text: "#475569" },
+    flying: { bg: "#e0e7ff", text: "#3730a3" },
+    ground: { bg: "#fef3c7", text: "#92400e" },
+    fairy: { bg: "#fce7f3", text: "#9d174d" },
+    fighting: { bg: "#fee2e2", text: "#7f1d1d" },
+    psychic: { bg: "#fce7f3", text: "#831843" },
+    rock: { bg: "#f5f5f4", text: "#44403c" },
+    ghost: { bg: "#ede9fe", text: "#4c1d95" },
+    ice: { bg: "#cffafe", text: "#164e63" },
+    dragon: { bg: "#ddd6fe", text: "#3730a3" },
+    dark: { bg: "#e7e5e4", text: "#1c1917" },
+    steel: { bg: "#f1f5f9", text: "#334155" },
   };
   useEffect(() => {
     document.querySelector("html").classList.remove("light", "dark");
@@ -192,6 +207,10 @@ function App() {
   }, [pagePokemon, pokemonById]);
 
   const handleToggleFavorite = (pokemonId) => {
+    if (!user) {
+      alert("Please login to add favorites");
+      return;
+    }
     setFavoriteIds((prev) => {
       if (prev.includes(pokemonId)) {
         return prev.filter((id) => id !== pokemonId);
@@ -199,23 +218,141 @@ function App() {
       return [...prev, pokemonId];
     });
   };
+  const showToast = (message) => {
+    setToast(message);
+
+    setTimeout(() => {
+      setToast("");
+    }, 2000);
+  };
 
   return (
     <>
       <ThemeProvider value={{ themeMode, darkTheme, lightTheme }}>
-        <div className="dark:bg-zinc-900">
-          <h1 className="text-3xl m-5 m:mt-8 md:mt-16 lg:mt-8 font-bold text-emerald-700 dark:text-lime-300 p-6 rounded-lg ">
-            {" "}
-            Welcome to Pokemon World!{" "}
-          </h1>
-          <div className="w-fit max-w-sm flex p-2 rounded-4xl dark:text-white dark:bg-yellow-100 absolute right-3 top-8">
-            <ThemeBtn />
+        <div className="dark:bg-zinc-900 ">
+          {toast && (
+            <div
+              className="fixed bottom-6 left-1/2 -translate-x-1/2 
+                  bg-gray-900 text-white px-6 py-3 
+                  rounded-xl shadow-lg z-10 font-bold text-lg
+                  animate-fadeInOut"
+            >
+              {toast}
+            </div>
+          )}
+          <div className="max-w-6xl mx-auto flex items-center gap-3 px-6 pt-8 pb-2">
+            {/* Logo */}
+            <img
+              src="/src/assets/Pokeball_PNG-removebg-preview.png"
+              alt="Pokeball"
+              className="w-10 h-10 object-contain"
+            />
+
+            {/* Title + subtitle */}
+            <div>
+              <h1 className="text-2xl font-bold text-emerald-700 dark:text-emerald-400 leading-tight">
+                Pokedex
+              </h1>
+
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                {allPokemon.length > 0
+                  ? `${allPokemon.length} Pokemon indexed`
+                  : ""}
+              </p>
+            </div>
           </div>
-          <h3 className="text-2xl font-semibold dark:text-sky-200">
+        <div className="absolute right-4 top-6 flex items-center gap-3">
+
+  {/* Hidden Google Button (only one instance) */}
+  {!user && (
+    <div className="hidden">
+      <GoogleLogin setUser={setUser} />
+    </div>
+  )}
+
+  {/* Desktop */}
+  <div className="hidden sm:flex items-center gap-3">
+
+    {!user ? (
+      <button
+        onClick={() => window.google.accounts.id.prompt()}
+        className="px-4 py-2 bg-emerald-500 text-white rounded-lg"
+      >
+        Login
+      </button>
+    ) : (
+      <div className="flex items-center gap-3 bg-white dark:bg-black px-3 py-2 rounded-xl shadow-sm">
+        <img src={user.picture} className="w-8 h-8 rounded-full" />
+        <p className="text-sm">{user.name}</p>
+        <button
+          onClick={() => {
+            setUser(null);
+            localStorage.removeItem("user");
+          }}
+          className="text-sm px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300"
+        >
+          Logout
+        </button>
+      </div>
+    )}
+
+    <ThemeBtn />
+  </div>
+
+  {/* Mobile button */}
+  <button
+    onClick={() => setPhoneAuth((s) => !s)}
+    className="sm:hidden w-10 h-10 rounded-full bg-emerald-500 text-white"
+  >
+    ☰
+  </button>
+
+  {/* Mobile dropdown */}
+  {phoneAuth && (
+    <div className="sm:hidden absolute right-4 top-16 w-60 p-4 bg-white dark:bg-zinc-800 rounded-xl shadow-lg">
+
+      {!user ? (
+        <button
+          onClick={() => {
+            window.google.accounts.id.prompt();
+            setPhoneAuth(false);
+          }}
+          className="w-full px-4 py-2 bg-emerald-500 text-white rounded-lg"
+        >
+          Login with Google
+        </button>
+      ) : (
+        <div className="flex items-center gap-3">
+          <img src={user.picture} className="w-8 h-8 rounded-full" />
+          <div>
+            <p className="text-sm">{user.name}</p>
+            <button
+              onClick={() => {
+                setUser(null);
+                localStorage.removeItem("user");
+                setPhoneAuth(false);
+              }}
+              className="text-xs text-red-500"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="mt-3">
+        <ThemeBtn />
+      </div>
+
+    </div>
+  )}
+</div>
+
+          <h3 className="text-2xl font-semibold dark:text-sky-200 mt-5">
             Discover your favorite Pokemon!
           </h3>
 
-          <div className="max-w-3xl mx-auto mt-6 p-4 bg-gray-100 rounded-2xl shadow-sm flex flex-col sm:flex-row gap-4 items-center">
+          <div className="max-w-3xl mx-auto mt-6 p-4 bg-gray-100 rounded-2xl shadow-sm flex flex-col sm:flex-row gap-4 items-center dark:bg-gray-700 ">
             <input
               type="text"
               placeholder="Search by name"
@@ -223,14 +360,14 @@ function App() {
               onChange={(e) => setSearchPoke(e.target.value)}
               className="w-full sm:flex-1 px-4 py-3 rounded-xl border border-gray-300 
                focus:outline-none focus:ring-2 focus:ring-blue-400 
-               bg-white dark:text-black"
+               bg-white dark:text-sky-200 dark:bg-zinc-600"
             />
             <select
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
               className="px-4 py-3 rounded-xl border border-gray-300 
                focus:outline-none focus:ring-2 focus:ring-blue-400 
-               bg-white cursor-pointer dark:text-black"
+               bg-white cursor-pointer dark:text-sky-300 dark:bg-zinc-600"
             >
               <option value="all">All</option>
               {types.map((t) => (
@@ -240,32 +377,33 @@ function App() {
               ))}
             </select>
             <FavoritesToggle
-            showFavorites={showFavorites}
-            onToggle={() => setShowFavorites((s) => !s)}
-          />
+              showFavorites={showFavorites}
+              onToggle={() => setShowFavorites((s) => !s)}
+            />
           </div>
 
-          
-
-          <div className="grid grid-cols-1 mt-15 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 dark:text-cyan-500 dark:bg-gray-700 p-12 rounded-lg ml-18 mr-18">
+          <div className="pokemon-grid grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 dark:text-cyan-500 p-12 rounded-lg ml-18 mr-18">
             {pagePokemon.length === 0 ? (
               <p className="text-center mt-10 text-gray-500">
-                No Pokémon found
+                No Pokemon found
               </p>
             ) : (
               pagePokemon.map((item) => {
                 const full = pokemonById[item.id];
                 if (!full) return null;
 
-                return (
-                  <PokemonCard
-                    pokemon={full}
-                    isFavorite={favoriteIds.includes(full.id)}
-                    onToggleFavorite={handleToggleFavorite}
-                    onSelectPokemon={() => setSelectedPokemon(full)}
-                    typesColor={typesColor}
-                  />
-                );
+                  return (
+                    <PokemonCard
+                      key={full.id}
+                      pokemon={full}
+                      isFavorite={favoriteIds.includes(full.id)}
+                      onToggleFavorite={handleToggleFavorite}
+                      onSelectPokemon={() => setSelectedPokemon(full)}
+                      typesColor={typesColor}
+                      user={user}
+                      showToast={showToast}
+                    />
+                  );
               })
             )}
           </div>

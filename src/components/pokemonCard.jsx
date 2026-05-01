@@ -6,6 +6,8 @@ function PokemonCard({
   onToggleFavorite,
   onSelectPokemon,
   typesColor = {},
+  user,
+  showToast,
 }) {
   const [isFavoriting, setIsFavoriting] = useState(false);
   const [statusText, setStatusText] = useState("");
@@ -49,10 +51,14 @@ function PokemonCard({
     >
       <button
         type="button"
-        className={`pokemon-card__favorite${isFavorite ? " is-active" : ""} cursor-pointer`}
+        className={`pokemon-card__favorite${isFavorite ? " is-active" : ""}  ${!user ? "opacity-50 cursor-not-allowed" : "cursor-pointer" }`}  
         onClick={(event) => {
           event.stopPropagation();
 
+          if (!user) {
+            showToast("Login to add favorites");
+            return;
+          }
           if (!isFavorite) {
             setIsFavoriting(true);
           }
@@ -76,7 +82,8 @@ function PokemonCard({
               key={type}
               className="type-pill capitalize"
               style={{
-                backgroundColor: typesColor[type] || "#e2e8f0",
+                backgroundColor: typesColor[type]?.bg || "#e2e8f0",
+                color: typesColor[type]?.text || "#0f172a",
               }}
             >
               {type}
