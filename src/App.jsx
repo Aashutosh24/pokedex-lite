@@ -283,7 +283,7 @@ function App() {
                       setUser(null);
                       localStorage.removeItem("user");
                     }}
-                    className="text-sm px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                    className="text-sm px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer dark:black"
                   >
                     Logout
                   </button>

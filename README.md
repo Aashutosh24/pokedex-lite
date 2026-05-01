@@ -1,213 +1,97 @@
 # Pokedex Lite
 
-This is a small project I built to explore working with APIs and React in a more practical way.  
-The idea was to create a simple Pokedex where you can browse Pokemon, search them, filter by type, and keep track of your favorites.
+A simple, fast, and user-friendly web app to browse, search, and favorite Pokemon using the PokéAPI.
 
-I didn’t want this to feel like a basic CRUD app, so I focused on keeping the UI smooth and the data handling clean.
-
----
-
-## What this app does
-
-- Search Pokemon by name (updates instantly)
-- Filter Pokemon by type
-- Add Pokemon to favorites (stored in browser)
-- View detailed stats in a popup
-- Toggle between light and dark mode
-- Load Pokemon gradually instead of everything at once
+Built with React and Vite, this project focuses on practicing API integration and managing UI state cleanly, while keeping performance smooth and avoiding unnecessary complexity.
 
 ---
 
-## Tech used
+## Features
 
-- React  
-- Vite  
-- Tailwind CSS  
-- PokeAPI  
-
-Nothing fancy — just kept it simple and focused.
-
----
-
-## How the app works
-
-Instead of loading all Pokemon at once, the app loads them in parts.  
-Every time you click "Load More", it fetches the next set and adds it to the list.
-
-Search and filters run on whatever data is already loaded, which keeps things fast and avoids unnecessary API calls.
+* **Real-time Search:** Search for Pokemon by name, with results updating as you type.
+* **Type Filtering:** Easily filter Pokemon by their elemental type.
+* **Pagination:** Browse results in clean increments of 20 per page.
+* **Favorites System:** Save your favorite Pokemon (persisted using localStorage).
+* **Detailed Modal View:** Click a Pokemon to view stats and types.
+* **Dark Mode:** Toggle between light and dark themes.
+* **Smooth UI:** Includes hover effects, modal transitions, and subtle animations.
 
 ---
 
-## Running the project
+## Tech Stack
 
-Clone the repo:
+* React
+* Vite
+* Tailwind CSS
+* PokéAPI
+
+---
+
+## How It Works
+
+* **Optimized Fetching:** On initial load, the app fetches only Pokemon names and IDs. Detailed data (images, stats, types) is fetched only when needed.
+* **Type Caching:** When a type is selected, the app fetches that list once and caches it for instant reuse.
+* **Smart Search & Filtering:** Search and filters work together, and pagination resets automatically to avoid empty result pages.
+
+---
+
+## Getting Started
+
+Clone the repository:
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Aashutosh24/pokedex-lite
 cd pokedex-lite
 ```
 
-### Step 2: Install Dependencies
+Install dependencies:
+
 ```bash
 npm install
 ```
 
-This will install all required packages:
-- **React** 19.2.5 - UI framework
-- **React DOM** 19.2.5 - React rendering
-- **Tailwind CSS** 4.2.4 - Utility-first CSS
-- **Vite** 8.0.10 - Build tool and dev server
-- **ESLint** 10.2.1 - Code quality tool
+Run the development server:
 
-## Getting Started
+```bash
+npm run dev
+```
 
-Start the app:
+Open in your browser:
 
-```npm run dev
-
-Open in browser:
-
+```
 http://localhost:5173
 ```
+
+---
 
 ## Project Structure
 
 ```
 src/
-├── App.jsx                 # Main component with API logic and state management
-├── App.css                 # Styles and animations (pokéball capture effect, etc.)
-├── main.jsx                # Entry point
-├── index.css               # Global styles (body background, typography)
-├── components/
-│   ├── pokemonCard.jsx     # Individual Pokémon card with favorite animation
-│   ├── PokemonModal.jsx    # Detail modal showing stats and information
-│   ├── favoritesToggle.jsx # Button to toggle favorite filter
-│   ├── ThemeBtn.jsx        # Light/Dark theme toggle switch
-│   ├── Search_Filter.jsx   # Search and filter controls
-│   ├── pokeballBurst.jsx   # Pokéball animation effect (optional)
-└── Context/
-    └── theme.js            # Theme context for dark mode
-
-public/                     # Static assets
-vite.config.js             # Vite configuration
-tailwind.config.js         # Tailwind CSS configuration
-eslint.config.js           # ESLint rules
-package.json               # Dependencies and scripts
+  App.jsx            // main logic (fetching + state)
+  components/        // UI components
+  Context/           // theme handling
 ```
 
-## How It Works
+---
 
-### Search
-The search feature filters Pokémon by name in real-time. As you type, the app searches through the complete Pokémon list and updates the grid instantly.
+## Notes & Design Choices
 
-### Type Filtering
-Select a type from the dropdown to filter Pokémon that have that type. The app fetches the Pokémon list for the selected type from PokéAPI.
+* **State Management:** Kept simple and predictable without external libraries.
+* **Type Colors:** Manually mapped since PokéAPI doesn’t provide them.
+* **User Experience:** Added a capture animation for favoriting to make interactions feel more engaging.
 
-### Favorites
-Click the heart icon (♡) on any card to add it to favorites. The heart becomes filled (♥) and the app saves your favorites to browser localStorage so they persist between sessions.
+---
 
-### Details Modal
-Click on any Pokémon card to open a modal showing:
-- Full Pokémon image
-- Name and Pokédex ID
-- All types
-- Stats: HP, Height, Attack, Defense, Speed
+## Possible Improvements
 
-### Theme Toggle
-Use the theme button in the header to switch between light and dark modes. Your preference is applied to all UI elements including the background, text, and cards.
+* Evolution chain view
+* Advanced filters (stats, abilities)
+* Enhanced animations and transitions
 
-### Pagination
-The fixed footer at the bottom shows your current page and allows you to navigate through pages of 20 Pokémon each. The Prev button disables on the first page, and Next disables on the last page.
+---
 
-## Technologies Used
+## Credits
 
-- **React** - JavaScript UI library for component-based development
-- **Vite** - Lightning-fast build tool and dev server
-- **Tailwind CSS** - Utility-first CSS framework for styling
-- **PokéAPI** - Free Pokémon data API (https://pokeapi.co)
-- **React Context** - For managing theme state across the app
-- **localStorage** - Browser API for persisting favorites
-
-## Key Dependencies
-
-```json
-{
-  "@tailwindcss/vite": "^4.2.4",
-  "react": "^19.2.5",
-  "react-dom": "^19.2.5",
-  "tailwindcss": "^4.2.4"
-}
-```
-
-## Development Tools
-
-```json
-{
-  "@vitejs/plugin-react": "^6.0.1",
-  "eslint": "^10.2.1",
-  "eslint-plugin-react-hooks": "^7.1.1",
-  "vite": "^8.0.10"
-}
-```
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari 15+
-- Edge (latest)
-
-## Performance Optimizations
-
-- **Lazy Loading**: Pokémon details are only fetched when needed
-- **Memoization**: Search and filter results are memoized to prevent unnecessary re-renders
-- **Code Splitting**: Vite automatically splits code for better performance
-- **Image Optimization**: Official Pokémon artwork is served with responsive loading
-
-## API Endpoints Used
-
-- `GET /pokemon?limit=2000` - Fetch all Pokémon list
-- `GET /type` - Fetch all types
-- `GET /type/{name}` - Fetch Pokémon of a specific type
-- `GET /pokemon/{id}` - Fetch details for a specific Pokémon
-
-## Troubleshooting
-
-### App won't start
-- Make sure Node.js v18+ is installed: `node --version`
-- Clear node_modules and reinstall: `rm -rf node_modules && npm install`
-- Check if port 5173 is available
-
-### Pokémon data not loading
-- Check your internet connection
-- PokéAPI might be temporarily down (check https://pokeapi.co)
-- Clear browser cache and reload
-
-### Dark theme not persisting
-- Check if localStorage is enabled in your browser
-- Clear browser data and try again
-
-### Favorites not saving
-- Ensure localStorage is enabled
-- Check browser privacy settings aren't blocking storage
-
-## Future Enhancements
-
-Possible features to add:
-- Pokemon evolution chains
-- Move sets and abilities
-- Team building feature
-- Advanced filters (by stat ranges)
-- Comparison tool for multiple Pokémon
-- Offline support with service workers
-
-## License
-
-This project is open source and available for personal and educational use.
-
-## Acknowledgments
-
-- **PokéAPI** - Providing free Pokémon data
-- **Pokémon** - Nintendo/Game Freak for the original Pokémon series
-- **Tailwind CSS** - Beautiful utility-first CSS framework
-- **React & Vite** - Amazing tools for modern web development
+* PokéAPI for the data
+* Pokemon (Nintendo / Game Freak)
