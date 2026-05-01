@@ -241,14 +241,12 @@ function App() {
             </div>
           )}
           <div className="max-w-6xl mx-auto flex items-center gap-3 px-6 pt-8 pb-2">
-            {/* Logo */}
             <img
-              src="/src/assets/Pokeball_PNG-removebg-preview.png"
+              src="public/icon.png"
               alt="Pokeball"
               className="w-10 h-10 object-contain"
             />
 
-            {/* Title + subtitle */}
             <div>
               <h1 className="text-2xl font-bold text-emerald-700 dark:text-emerald-400 leading-tight">
                 Pokedex
@@ -261,92 +259,82 @@ function App() {
               </p>
             </div>
           </div>
-        <div className="absolute right-4 top-6 flex items-center gap-3">
+          <div className="absolute right-4 top-6 flex items-center gap-3">
+            {!user && (
+              <div className="hidden cursor-pointer">
+                <GoogleLogin setUser={setUser} />
+              </div>
+            )}
+            <div className="hidden sm:flex items-center gap-3">
+              {!user ? (
+                <button
+                  onClick={() => window.google.accounts.id.prompt()}
 
-  {/* Hidden Google Button (only one instance) */}
-  {!user && (
-    <div className="hidden">
-      <GoogleLogin setUser={setUser} />
-    </div>
-  )}
+                  className="px-4 py-2 bg-emerald-500 text-white rounded-lg cursor-pointer"
+                >
+                  Login
+                </button>
+              ) : (
+                <div className="flex items-center gap-3 bg-white dark:bg-black px-3 py-2 rounded-xl shadow-sm">
+                  <img src={user.picture} className="w-8 h-8 rounded-full" />
+                  <p className="text-sm">{user.name}</p>
+                  <button
+                    onClick={() => {
+                      setUser(null);
+                      localStorage.removeItem("user");
+                    }}
+                    className="text-sm px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
 
-  {/* Desktop */}
-  <div className="hidden sm:flex items-center gap-3">
-
-    {!user ? (
-      <button
-        onClick={() => window.google.accounts.id.prompt()}
-        className="px-4 py-2 bg-emerald-500 text-white rounded-lg"
-      >
-        Login
-      </button>
-    ) : (
-      <div className="flex items-center gap-3 bg-white dark:bg-black px-3 py-2 rounded-xl shadow-sm">
-        <img src={user.picture} className="w-8 h-8 rounded-full" />
-        <p className="text-sm">{user.name}</p>
-        <button
-          onClick={() => {
-            setUser(null);
-            localStorage.removeItem("user");
-          }}
-          className="text-sm px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300"
-        >
-          Logout
-        </button>
-      </div>
-    )}
-
-    <ThemeBtn />
-  </div>
-
-  {/* Mobile button */}
-  <button
-    onClick={() => setPhoneAuth((s) => !s)}
-    className="sm:hidden w-10 h-10 rounded-full bg-emerald-500 text-white"
-  >
-    ☰
-  </button>
-
-  {/* Mobile dropdown */}
-  {phoneAuth && (
-    <div className="sm:hidden absolute right-4 top-16 w-60 p-4 bg-white dark:bg-zinc-800 rounded-xl shadow-lg">
-
-      {!user ? (
-        <button
-          onClick={() => {
-            window.google.accounts.id.prompt();
-            setPhoneAuth(false);
-          }}
-          className="w-full px-4 py-2 bg-emerald-500 text-white rounded-lg"
-        >
-          Login with Google
-        </button>
-      ) : (
-        <div className="flex items-center gap-3">
-          <img src={user.picture} className="w-8 h-8 rounded-full" />
-          <div>
-            <p className="text-sm">{user.name}</p>
+              <ThemeBtn />
+            </div>
             <button
-              onClick={() => {
-                setUser(null);
-                localStorage.removeItem("user");
-                setPhoneAuth(false);
-              }}
-              className="text-xs text-red-500"
+              onClick={() => setPhoneAuth((s) => !s)}
+              className="sm:hidden w-10 h-10 rounded-full bg-emerald-500 text-white"
             >
-              Logout
+              ☰
             </button>
+            {phoneAuth && (
+              <div className="sm:hidden absolute right-4 top-16 w-60 p-4 bg-white dark:bg-zinc-800 rounded-xl shadow-lg">
+                {!user ? (
+                  <button
+                    onClick={() => {
+                      window.google.accounts.id.prompt();
+                      setPhoneAuth(false);
+                    }}
+                    className="w-full px-4 py-2 bg-emerald-500 text-white rounded-lg cursor-pointer"
+                  >
+                    Login with Google
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <img src={user.picture} className="w-8 h-8 rounded-full" />
+                    <div>
+                      <p className="text-sm">{user.name}</p>
+                      <button
+                        onClick={() => {
+                          setUser(null);
+                          localStorage.removeItem("user");
+                          setPhoneAuth(false);
+                        }}
+                        className="text-xs text-red-500 cursor-pointer"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-3">
+                  <ThemeBtn />
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      )}
-
-      <div className="mt-3">
-        <ThemeBtn />
-      </div>
-
-    </div>
-  )}
-</div>
 
           <h3 className="text-2xl font-semibold dark:text-sky-200 mt-5">
             Discover your favorite Pokemon!
@@ -392,18 +380,18 @@ function App() {
                 const full = pokemonById[item.id];
                 if (!full) return null;
 
-                  return (
-                    <PokemonCard
-                      key={full.id}
-                      pokemon={full}
-                      isFavorite={favoriteIds.includes(full.id)}
-                      onToggleFavorite={handleToggleFavorite}
-                      onSelectPokemon={() => setSelectedPokemon(full)}
-                      typesColor={typesColor}
-                      user={user}
-                      showToast={showToast}
-                    />
-                  );
+                return (
+                  <PokemonCard
+                    key={full.id}
+                    pokemon={full}
+                    isFavorite={favoriteIds.includes(full.id)}
+                    onToggleFavorite={handleToggleFavorite}
+                    onSelectPokemon={() => setSelectedPokemon(full)}
+                    typesColor={typesColor}
+                    user={user}
+                    showToast={showToast}
+                  />
+                );
               })
             )}
           </div>
