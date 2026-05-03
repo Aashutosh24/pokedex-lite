@@ -407,7 +407,7 @@ function App() {
             <button
               onClick={() => setPage((p) => (p > 1 ? p - 1 : p))}
               disabled={page === 1}
-              className="px-4 py-2 bg-gray-200 rounded-lg cursor-pointer hover:bg-amber-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-gray-200 rounded-lg cursor-pointer hover:bg-amber-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-black dark:text-amber-100 dark:hover:text-teal-800"
             >
               Prev
             </button>
@@ -417,7 +417,7 @@ function App() {
             <button
               onClick={() => setPage((p) => (p < totalPages ? p + 1 : p))}
               disabled={page >= totalPages}
-              className="px-4 py-2 bg-gray-200 rounded-lg cursor-pointer hover:bg-amber-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-gray-200 rounded-lg cursor-pointer hover:bg-amber-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-black dark:text-amber-100 dark:hover:text-teal-800"
             >
               Next
             </button>
